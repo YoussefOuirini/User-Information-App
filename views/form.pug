@@ -3,11 +3,16 @@ html
 		title Login page
 	body
 		h4 Type your first name or last name.
-		form(action='/search' method='post')
-			input(name='name') 
+		form(action='/search' method='post' autocomplete="off")
+			input(type='text' list="suggestion" id='user' name='name') 
+			datalist#suggestion
+				option(value="" id="suggestion1")
+				option(value="" id="suggestion2")
 			br
 			br
 			input(type="submit" value="submit your first name or last name")
-
-
+	script
+		include ../jquery.js
+		include ../customJquery.js
+	script(src='http://code.jquery.com/ui/1.10.2/jquery-ui.js')
 
