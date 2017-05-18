@@ -63,7 +63,6 @@ app.get('/search', (request,response) =>{
 
 app.post('/search', (request, response) => {
     var typedIn = request.body.name
-    var users = undefined
     fs.readFile('./users.json', function(err, data) {
         if (err) {
             console.log(err);
@@ -71,31 +70,36 @@ app.post('/search', (request, response) => {
         var parsedData = JSON.parse(data);
         if (typedIn===undefined) {
             typedIn= request.body.typedIn
+            var users= [];
             for (var i=0; i < parsedData.length; i++) {
                 if (parsedData[i].firstname.slice(0,typedIn.length)===typedIn) {
-                    if (users === undefined) {
-                        users = parsedData[i].firstname + " " + parsedData[i].lastname
-                    } else {
-                        users+= " "+ parsedData[i].firstname + " " + parsedData[i].lastname
-                    }
-                }
-            }
+                    users.push(parsedData[i].firstname +" "+ parsedData[i].lastname);
+                    // if (users === undefined) {
+                    //     users = parsedData[i].firstname + " " + parsedData[i].lastname
+                    // } else {
+                    //     users+= " "+ parsedData[i].firstname + " " + parsedData[i].lastname
+                    // }
+                };
+            };
             response.send(users)
-        }
+        };
         for (var i=0; i < parsedData.length; i++) {
-            if(parsedData[i].firstname===typedIn || parsedData[i].lastname===typedIn) {
+            if(parsedData[i].firstname===typedIn || parsedData[i].lastname===typedIn || parsedData[i].firstname + " " + parsedData[i].lastname === typedIn) {
                 var usersFirstName= parsedData[i].firstname;
                 var usersLastName= parsedData[i].lastname;
                 var usersEmail= parsedData[i].email;
                 // send back suggestion
-                response.render('./views/users', {
-                    usersFirstName: usersFirstName,
-                    usersLastName: usersLastName,
-                    usersEmail: usersEmail,
-                });
             }; 
         };
-        response.end("No user known with that name boss.")
+        if (usersFirstName !=undefined) {
+            response.render('./views/users', {
+                usersFirstName: usersFirstName,
+                usersLastName: usersLastName,
+                usersEmail: usersEmail,
+            });
+        } else {
+            response.end("No user known with that name boss.")
+        }
     });
 });
 

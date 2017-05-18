@@ -7,7 +7,11 @@ $(document).ready(function(){
                 typedIn: $("#user").val()
             }, 
             (data, status) => {
-                document.getElementById("suggestion").value = data;
+                console.log(data)
+                document.getElementById("suggestion1").value = data[0];
+                if (data[1]!= undefined) {
+                    document.getElementById("suggestion2").value = data[1];
+                }
                 // alert("Data: " + data + "\nStatus: " + status);
                 //the part that is going to make the suggestion show up in your search. On key up event listener.
                 // google for live search.
