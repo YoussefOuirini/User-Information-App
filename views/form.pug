@@ -2,7 +2,7 @@ html
 	head
 		title Login page
 	body
-		h4 Type your first name or last name.
+		h4 Type in your name!
 		form(action='/search' method='post' autocomplete="off")
 			input(type='text' list="suggestion" id='user' name='name') 
 			datalist#suggestion
@@ -10,7 +10,7 @@ html
 				option(value="" id="suggestion2")
 			br
 			br
-			input(type="submit" value="submit your first name or last name")
+			input(type="submit" value="Submit!")
 	script
 		include ../jquery.js
 		include ../customJquery.js

@@ -74,21 +74,15 @@ app.post('/search', (request, response) => {
             for (var i=0; i < parsedData.length; i++) {
                 if (parsedData[i].firstname.slice(0,typedIn.length)===typedIn) {
                     users.push(parsedData[i].firstname +" "+ parsedData[i].lastname);
-                    // if (users === undefined) {
-                    //     users = parsedData[i].firstname + " " + parsedData[i].lastname
-                    // } else {
-                    //     users+= " "+ parsedData[i].firstname + " " + parsedData[i].lastname
-                    // }
                 };
             };
-            response.send(users)
+            response.send(users);
         };
         for (var i=0; i < parsedData.length; i++) {
             if(parsedData[i].firstname===typedIn || parsedData[i].lastname===typedIn || parsedData[i].firstname + " " + parsedData[i].lastname === typedIn) {
                 var usersFirstName= parsedData[i].firstname;
                 var usersLastName= parsedData[i].lastname;
                 var usersEmail= parsedData[i].email;
-                // send back suggestion
             }; 
         };
         if (usersFirstName !=undefined) {
@@ -97,7 +91,7 @@ app.post('/search', (request, response) => {
                 usersLastName: usersLastName,
                 usersEmail: usersEmail,
             });
-        } else {
+        } else if (usersFirstName===undefined) {
             response.end("No user known with that name boss.")
         }
     });
@@ -117,7 +111,6 @@ app.get('/register', (request,response) =>{
 
 
 app.post('/register', (request, response) => {
-    // console.log(request.body);;
     fs.readFile('./users.json', function(err, data) {
         if (err) {
             console.log(err);
