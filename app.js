@@ -17,6 +17,22 @@ app.use('/', bodyParser())
 app.set('views', './');
 app.set('view engine', 'pug');
 
+function allUsers (user) {
+    var found = 0 ;
+    var newArray= [];
+    for (var i=0; i < arrayOfUsers.length; i++) {
+        if (arrayOfUsers[i]=== value) {
+            newArray.push(i);
+            found++
+        }
+    }
+    if (found === 0) {
+        return -1
+    } else {
+        return newArray
+    }
+}
+
 app.get('/', function(request, response) {
   fs.readFile('./users.json', function(err, data) {
     if (err) {
@@ -38,71 +54,51 @@ app.get('/', function(request, response) {
 
 app.get('/search', (request,response) =>{
 	response.render('./views/form')
-		// '<form action="/" method="post">\
-		// 	<input name="email">\
-		// 	<br/>\
-		// 	<input type="submit" value="submit your email">\
-		// </form>')
 });
 
 
 // - route 3: takes in the post request from your form, then displays matching users on a new page. 
 // Users should be matched based on whether either their first or last name contains the input string.
 
-// app.post('/login', (request, response) => {
-// 	console.log(request.body);
-// 	fs.readFile('./users.json', function(err, data) {
-//     	if (err) {
-//       		console.log(err);
-//     	}
-//         var parsedData = JSON.parse(data);
-//     	for (var i=0; i < parsedData.length; i++) {
-//     		if(request.body.email===parsedData[i].email) {
-//     			response.render('./views/users', {
-//     				users: parsedData,
-//     			}); 
-//     		}
-// 		}
-// 	})
-// });
 
 app.post('/search', (request, response) => {
-    console.log(request.body);
+    var typedIn = request.body.name
+    var users = undefined
     fs.readFile('./users.json', function(err, data) {
         if (err) {
             console.log(err);
         }
         var parsedData = JSON.parse(data);
+        if (typedIn===undefined) {
+            typedIn= request.body.typedIn
+            for (var i=0; i < parsedData.length; i++) {
+                if (parsedData[i].firstname.slice(0,typedIn.length)===typedIn) {
+                    if (users === undefined) {
+                        users = parsedData[i].firstname + " " + parsedData[i].lastname
+                    } else {
+                        users+= " "+ parsedData[i].firstname + " " + parsedData[i].lastname
+                    }
+                }
+            }
+            response.send(users)
+        }
         for (var i=0; i < parsedData.length; i++) {
-            if(request.body.name===parsedData[i].firstname || request.body.name===parsedData[i].lastname) {
+            if(parsedData[i].firstname===typedIn || parsedData[i].lastname===typedIn) {
                 var usersFirstName= parsedData[i].firstname;
                 var usersLastName= parsedData[i].lastname;
                 var usersEmail= parsedData[i].email;
+                // send back suggestion
                 response.render('./views/users', {
                     usersFirstName: usersFirstName,
                     usersLastName: usersLastName,
                     usersEmail: usersEmail,
-                }); 
+                });
             }; 
         };
         response.end("No user known with that name boss.")
     });
 });
 
-// app.get('/users', (request,response) => {
-// 	var parsedData = JSON.parse(data);
-// 	fs.readFile('./users.json', function(err, data) {
-// 		var parsedData = JSON.parse(data);
-//     	if (err) {
-//       		console.log(err);
-//       	}
-// 		if (request.body===parsedData.email) {
-// 			response.render("users", {
-// 				users:parsedData
-// 			})
-// 		}
-// 	})
-// });
 
 // Part 2
 // Create two more routes:
@@ -115,18 +111,6 @@ app.get('/register', (request,response) =>{
     response.render('./views/register')
 });
 
-// app.post('/', (request, response) => {
-//     console.log(request.body);
-//     newData= JSON.stringify(request.body);
-//     console.log(request.body)
-//     fs.appendFile(parsedData.push('./users.json', newData, function (err) {
-//         if (err) {
-//             throw err;
-//         }
-//         console.log('Registered!')
-//     }));
-//     response.end('post request received')
-// });
 
 app.post('/register', (request, response) => {
     // console.log(request.body);;
@@ -147,13 +131,6 @@ app.post('/register', (request, response) => {
     // response.end('Thank you for your personal information....Moron....');
 });
 
-// app.post('/register', (request, response) => {
-//     console.log(request.body);;
-//     newUser= request.body;
-//     newData= JSON.stringify(newUser);
-//     fs.appendFile.push('./users.json', newData);
-//     response.end('Thank you for your personal information....Moron....');
-// });
 
 var server = app.listen(3000, function() {
   console.log('http//:localhost:' + server.address().port);
