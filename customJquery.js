@@ -2,7 +2,7 @@ $(document).ready(function(){
     var suggestionFinder = function () {
         var time= Date.now();
         $("#user").keyup(function(){
-            if (time+3000 < Date.now()) {
+            if (time+300 < Date.now()) {
                 time=Date.now();
                 $.post('/search', {
                     typedIn: $("#user").val()
