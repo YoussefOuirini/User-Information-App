@@ -68,23 +68,26 @@ app.post('/search', (request, response) => {
             console.log(err);
         }
         var parsedData = JSON.parse(data);
-        if (typedIn===undefined) {
-            typedIn= request.body.typedIn
+
+        if (typedIn === undefined) {
+            typedIn = request.body.typedIn
             var users= [];
             for (var i=0; i < parsedData.length; i++) {
-                if (parsedData[i].firstname.slice(0,typedIn.length)===typedIn) {
+                if (parsedData[i].firstname.slice(0,typedIn.length) === typedIn  && typedIn !="") {
                     users.push(parsedData[i].firstname +" "+ parsedData[i].lastname);
                 };
             };
             response.send(users);
         };
+
         for (var i=0; i < parsedData.length; i++) {
-            if(parsedData[i].firstname===typedIn || parsedData[i].lastname===typedIn || parsedData[i].firstname + " " + parsedData[i].lastname === typedIn) {
+            if(parsedData[i].firstname===request.body.name || parsedData[i].lastname===request.body.name || parsedData[i].firstname + " " + parsedData[i].lastname === request.body.name) {
                 var usersFirstName= parsedData[i].firstname;
                 var usersLastName= parsedData[i].lastname;
                 var usersEmail= parsedData[i].email;
             }; 
         };
+
         if (usersFirstName !=undefined) {
             response.render('./views/users', {
                 usersFirstName: usersFirstName,
