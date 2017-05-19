@@ -9,9 +9,15 @@ $(document).ready(function(){
                 }, 
                 (data, status) => {
                     console.log(data)
-                    document.getElementById("suggestion1").value = data[0];
-                    if (data[1]!= undefined) {
-                        document.getElementById("suggestion2").value = data[1];
+                    if (data[0]===undefined) {
+                        $("#suggestion1").hide()
+                    } else {
+                        $("#suggestion1").val(data[0])
+                    }
+                    if (data[1] === undefined) {
+                        $("#suggestion2").hide()
+                    } else {
+                        $("#suggestion2").val(data[1])
                     }
                 });
             }
